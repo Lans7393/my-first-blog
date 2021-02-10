@@ -1,10 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <title>Questions list</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
     </head>
     <body>
+        
         {% if latest_question_list %}
             <ul>
             {% for question in latest_question_list %}
@@ -16,3 +19,4 @@
         {% endif %}
     </body>
 </html>
+
