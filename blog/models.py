@@ -1,7 +1,11 @@
+import logging
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+
+logger = logging.getLogger(__name__)
 
 class Post(models.Model):
     '''
@@ -16,6 +20,11 @@ class Post(models.Model):
     def publish(self):
         self.published_date = timezone.now()
         self.save()
+
+    def approved_comments(self):
+        comments = self.comments.filter(approved_comment=True)
+        logger.debug(f'Post name: {self}, approved comments count: {comments.count()}')
+        return comments
 
     def __str__(self):
         return self.title
@@ -36,7 +45,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
-        
+
     def approve(self):
         self.approved_comment = True
         self.save()

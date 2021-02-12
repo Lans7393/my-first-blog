@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-from blog.models import Post
+from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
 
 
@@ -71,3 +71,15 @@ def add_comment_to_post(request, pk):
     else:
         form = CommentForm()
     return render(request, 'blog/add_comment_to_post.html', {'form': form})
+
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve()
+    return redirect('blog:post_detail', pk=comment.post.pk)
+
+@login_required
+def comment_remove(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.delete()
+    return redirect('blog:post_detail', pk=comment.post.pk)
