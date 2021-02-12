@@ -4,6 +4,9 @@ from django.utils import timezone
 
 
 class Post(models.Model):
+    '''
+    Posts (articles) created by users
+    '''
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     text = models.TextField()
@@ -20,5 +23,26 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
+
+class Comment(models.Model):
+    '''
+    Comments under the posts
+    '''
+    post = models.ForeignKey(Post,on_delete=models.CASCADE, related_name='comments')
+    author = models.CharField('автор коментария', max_length=200)
+    text = models.TextField('текст коментария')
+    created_date = models.DateTimeField('дата создания', default=timezone.now)
+    approved_comment = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+        
+    def approve(self):
+        self.approved_comment = True
+        self.save()
+
+    class Meta:
+        verbose_name = 'коментарий'
+        verbose_name_plural = 'коментарии'
 
     
